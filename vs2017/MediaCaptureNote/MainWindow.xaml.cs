@@ -38,6 +38,21 @@ namespace MediaCaptureNote
 
         private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
+            comboBox_Devices.Items.Clear();
+
+            var cameraDevices = await GetCameraDevicesAsync();
+
+            foreach (var device in cameraDevices)
+            {
+                comboBox_Devices.Items.Add(device.Name);
+            }
+
+
+            //await InitializeCameraAsync();
+        }
+
+        private async void ComboBox_Devices_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
             await InitializeCameraAsync();
         }
 
@@ -50,7 +65,7 @@ namespace MediaCaptureNote
                 Console.WriteLine($"Device Name: {device.Name}, ID: {device.Id}");
             }
 
-            var selectedDevice = cameraDevices[2];
+            var selectedDevice = cameraDevices[comboBox_Devices.SelectedIndex];
 
             _mediaCapture = new MediaCapture();
             await _mediaCapture.InitializeAsync(new MediaCaptureInitializationSettings
